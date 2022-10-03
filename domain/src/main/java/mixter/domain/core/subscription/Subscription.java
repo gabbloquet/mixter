@@ -47,6 +47,10 @@ public class Subscription {
         eventPublisher.publish(event);
     }
 
+    public SubscriptionId getId() {
+        return projection.id;
+    }
+
     @Projection
     private class DecisionProjection extends DecisionProjectionBase {
 

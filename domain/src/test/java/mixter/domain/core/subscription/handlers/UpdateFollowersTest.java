@@ -41,8 +41,10 @@ public class UpdateFollowersTest {
         UserUnfollowed userUnfollowed = new UserUnfollowed(new SubscriptionId(FOLLOWER, FOLLOWEE));
         UpdateFollowers handler = new UpdateFollowers(repository);
         handler.apply(userFollowed);
+
         // When
         handler.apply(userUnfollowed);
+
         // Then
         assertThat(repository.getFollowers(FOLLOWEE)).isEmpty();
     }
