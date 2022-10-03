@@ -29,7 +29,7 @@ public class Message {
     }
 
     public void reQuack(UserId userId, EventPublisher eventPublisher, UserId authorId, String message) {
-        if (projection.publishers.contains(userId)) {
+        if (isFromAuthor(userId) || projection.isDeleted) {
             return;
         }
         MessageRequacked event = new MessageRequacked(projection.getId(), userId, authorId, message);
@@ -37,20 +37,30 @@ public class Message {
     }
 
     public void delete(UserId userId, EventPublisher eventPublisher) {
-        if (projection.publishers.contains(userId)) {
-            MessageDeleted event = new MessageDeleted(projection.id);
+        MessageDeleted event = new MessageDeleted(projection.id);
+        if (!isAlreadyDeleted(event) && isFromAuthor(userId)) {
             eventPublisher.publish(event);
         }
+    }
+
+    private boolean isAlreadyDeleted(MessageDeleted event) {
+        return projection.id.equals(event.getMessageId()) && projection.isDeleted;
+    }
+
+    private boolean isFromAuthor(UserId userId) {
+        return projection.publishers.contains(userId);
     }
 
     @Projection
     private class DecisionProjection extends DecisionProjectionBase {
         private MessageId id;
-        public Set<UserId> publishers=new HashSet<>();
+        public Set<UserId> publishers = new HashSet<>();
+        private boolean isDeleted;
 
         public DecisionProjection(List<Event> history) {
             super.register(MessageQuacked.class, this::apply);
             super.register(MessageRequacked.class, this::apply);
+            super.register(MessageDeleted.class, this::apply);
             history.forEach(this::apply);
         }
 
@@ -61,6 +71,11 @@ public class Message {
 
         private void apply(MessageRequacked event) {
             publishers.add(event.getUserId());
+        }
+
+        private void apply(MessageDeleted event) {
+            id = event.getMessageId();
+            isDeleted = true;
         }
 
         public MessageId getId() {

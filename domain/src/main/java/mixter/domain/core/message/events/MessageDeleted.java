@@ -3,6 +3,7 @@ package mixter.domain.core.message.events;
 import mixter.domain.AggregateId;
 import mixter.domain.Event;
 import mixter.domain.core.message.MessageId;
+import mixter.domain.identity.UserId;
 
 public class MessageDeleted implements Event {
     private final MessageId messageId;
@@ -20,6 +21,10 @@ public class MessageDeleted implements Event {
 
         return that.messageId == this.messageId;
 
+    }
+
+    public MessageId getMessageId() {
+        return messageId;
     }
 
     @Override
