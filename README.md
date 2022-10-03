@@ -1,3 +1,8 @@
+# Mixter by @gabbloquet
+
+Big thanks to @DevLyon team ! ➡️ [repository](https://github.com/DevLyon/mixter
+)
+
 Mixter
 ======
 Mixter is a project to discover CQRS/Event sourcing through koans in multiple languages.
