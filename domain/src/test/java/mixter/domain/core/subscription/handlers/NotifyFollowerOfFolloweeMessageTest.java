@@ -68,6 +68,7 @@ public class NotifyFollowerOfFolloweeMessageTest extends DomainTest {
 
         // When
         handler.apply(messageRequacked);
+
         // Then
         FolloweeMessageQuacked followeeMessagePublished = new FolloweeMessageQuacked(new SubscriptionId(FOLLOWER_ID, AUTHOR_ID), MESSAGE_ID);
         assertThat(eventPublisher.publishedEvents).containsExactly(followeeMessagePublished);
