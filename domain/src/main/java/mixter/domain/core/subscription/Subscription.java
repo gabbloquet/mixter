@@ -39,6 +39,8 @@ public class Subscription {
     }
 
     public void notifyFollower(MessageId messageId, EventPublisher eventPublisher) {
+        if(projection.subscriptions.isEmpty())
+            return;
         SubscriptionId subscriptionId = projection.subscriptions.get(0);
         FolloweeMessageQuacked event = new FolloweeMessageQuacked(subscriptionId, messageId);
 
@@ -63,7 +65,7 @@ public class Subscription {
         }
 
         private void apply(UserUnfollowed event) {
-//            subscriptions.add(event.getId());
+            subscriptions.remove(event.getSubscriptionId());
         }
     }
 }
